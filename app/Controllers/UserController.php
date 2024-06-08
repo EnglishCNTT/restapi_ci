@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Libraries\ColumnLib;
+use App\Libraries\TableLib;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
@@ -17,13 +19,33 @@ class UserController extends ResourceController
     protected $format = 'json';
     public function index()
     {
-        $data = [
-            'message' => 'success',
-            'data_users' => $this->model->findAll()
-        ];
-        return $this->respond($data, 200);
-        // return $this->respond($this->model->findAll());
+
+
+        $order = $this->request->getVar('order');
+        $order = array_shift($order);
+
+        $modelList = model('UserModel');
+        $tableLib = new TableLib($modelList, 'User', [
+            'id',
+            'name',
+            'email',
+            'created_at',
+            'updated_at'
+        ]);
+        $response = $tableLib->getResponse([
+            'draw' => $this->request->getVar('draw'),
+            'start' => $this->request->getVar('start'),
+            'length' => $this->request->getVar('length'),
+            'order' => $order['column'],
+            'direction' => $order['dir'],
+            'search' => $this->request->getVar('search')['value']
+        ]);
+
+
+
+        return $this->respond($response);
     }
+
 
     /**
      * Return the properties of a resource object.

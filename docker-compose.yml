@@ -1,0 +1,26 @@
+version: '3'
+services:
+  web:
+    image: php:apache
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 80:80
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: phptest
+      MYSQL_USER: devenglish
+      MYSQL_PASSWORD: dev
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - 8080:80
