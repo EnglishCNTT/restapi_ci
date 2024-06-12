@@ -104,6 +104,8 @@ class UserController extends ResourceController
             'image' => $imgName
         ]);
 
+        
+
 
         $response = [
             'status' => 201,
